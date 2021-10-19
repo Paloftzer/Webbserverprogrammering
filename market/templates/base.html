@@ -33,6 +33,20 @@
           </div>
         </div>
       </nav>
+      <!-- Python kod -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          <btn type="btn" class="m1-2 mb1 close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </btn>
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
       {% block content %}
 
       {% endblock %}
@@ -40,5 +54,5 @@
 </body>
 </html>
 
-<!This is the base of our website which we can then extend to our other html files
-so that we don't need to rewrite this code several time in each file>
+<!--This is the base of our website which we can then extend to our other html files
+so that we don't need to rewrite this code several time in each file-->

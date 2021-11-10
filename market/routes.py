@@ -1,7 +1,6 @@
 # routes.py file
 
 #* This imports the necessary packages/modules to route our requests to the correct location and display the correct page.
-
 from flask.helpers import flash # This imports the error message when a user fails to comply with the rules of creating an account.
 from market import app # This imports our app (website) from our market folder.
 from flask import render_template, redirect, url_for # This imports only the necessary packages for us to redirect requests to the correct location.

@@ -5,7 +5,7 @@ from flask.helpers import flash # This imports the error message when a user fai
 from market import app # This imports our app (website) from our market folder.
 from flask import render_template, redirect, url_for # This imports only the necessary packages for us to redirect requests to the correct location.
 from market.models import Item, User # This imports our Item and User modules from our database model.
-from market.forms import RegisterForm # This imports our RegisterForm so that we can use it for our routes.
+from market.forms import RegisterForm, LoginForm # This imports our RegisterForm so that we can use it for our routes.
 from market import db # This imports our database from the __init__.py file in our market folder.
 
 #* This routes to our main page using the Flask routing system and defines a name for the route.
@@ -50,3 +50,13 @@ def register_page():
             flash(f"There was an error creating user: {err_msg}", category="danger")
     # This returns our register.html file from our templates folder. It also communicates that we have used the form variable on this page.
     return render_template("register.html", form=form)
+
+#* This creates a route to the login page
+@app.route("/login", methods=["GET", "POST"])
+def login_page():
+    form = LoginForm()
+    #*if form.validate_on_submit():
+    if form.errors != {}:
+        for err_msg in form.errors.values():
+            flash(f"There was an error logging in: {err_msg}", category="danger")
+    return render_template("login.html", form=form)

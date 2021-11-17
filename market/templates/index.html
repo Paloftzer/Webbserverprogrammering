@@ -1,11 +1,12 @@
+<!-- This extends the base.html file so that we don't have to rewrite the entire html code over and over again. -->
 {% extends 'base.html' %}
 
+<!-- This is the title block where we enter a title for the current page, the data is then added to the base.html but only when this page is displayed. -->
 {% block title %}
     Home Page
 {% endblock %}
 
+<!-- This is the content block where we enter the content we want on the current page, the data is then added to the base.html but only when this page is displayed. -->
 {% block content %}
     <div style='color: white'>Detta är vårt Content i vår Basemall som är nu på index!</div>
 {% endblock %}
-
-<!--The code extends from our base.html, gives it a new title and adds some content.-->

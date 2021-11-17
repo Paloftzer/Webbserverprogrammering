@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
+      <!-- This creates a block with the name title, which we can then easily edit in our other .html files to quickly give each page a new and unique title. -->
       {% block title %}
 
       {% endblock %}
@@ -34,19 +35,20 @@
         </div>
       </nav>
       <!-- Python kod -->
+      <!-- This gets the error messages which were created in our routes.py file and sends them to the base.html file -->
       {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-      {% for category, message in messages %}
+      {% if messages %} <!-- if statement -->
+      {% for category, message in messages %} <!-- A for statement which sends an error message for every error which occurred. -->
         <div class="alert alert-{{ category }}">
           <btn type="btn" class="m1-2 mb1 close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </btn>
-          {{ message }}
+          {{ message }} <!-- Shows the specific error message -->
         </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-
+        {% endfor %} <!-- Ends the for statement -->
+        {% endif %} <!-- Ends the if statement -->
+        {% endwith %} <!-- Ends the with statement -->
+      <!-- This creates a block with the name content, which is where we put the main content for our website in the other .html files. -->
       {% block content %}
 
       {% endblock %}

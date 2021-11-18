@@ -1,12 +1,17 @@
 # models.py file
 
 #* This imports the needed packages.
-from market import db # This imports our database from the market folder.
+from market import db, login_manager # This imports our database from the market folder.
 from market import bcrypt # This imports bcrypt from our market folder so that we can encrypt passwords.
+from flask_login import UserMixin
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 #* This creates a users account as well as their current budget.
 #* This defines that a User Table should be added to the database through (db.Model).
-class User(db.Model):
+class User(db.Model, UserMixin):
     # This creates an integer column for the id in the database, and it is the primary_key.
     id = db.Column(db.Integer(), primary_key=True)
     # This creates a string column for the username in the database, and it can have a max length of 30, cannot be null (empty) and has to be unique.
@@ -28,6 +33,10 @@ class User(db.Model):
     def password(self, plain_text_password):
         # This takes the plain text password and converts it into a hashed password.
         self.password_hash = bcrypt.generate_password_hash(plain_text_password).decode("utf-8")
+
+    def check_password_correction(self, attempted_password):
+        if bcrypt.check_password_hash(self.password_hash, attempted_password):
+            return True
 
 #* This generates the item table.
 class Item(db.Model):

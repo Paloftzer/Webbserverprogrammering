@@ -2,6 +2,7 @@
 
 #* This imports the necessary packages/modules to route our requests to the correct location and display the correct page.
 from flask.helpers import flash # This imports the error message when a user fails to comply with the rules of creating an account.
+from flask_login import login_user # This imports the login function needed to login.
 from market import app # This imports our app (website) from our market folder.
 from flask import render_template, redirect, url_for # This imports only the necessary packages for us to redirect requests to the correct location.
 from market.models import Item, User # This imports our Item and User modules from our database model.
@@ -55,8 +56,14 @@ def register_page():
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
     form = LoginForm()
-    #*if form.validate_on_submit():
-    if form.errors != {}:
-        for err_msg in form.errors.values():
-            flash(f"There was an error logging in: {err_msg}", category="danger")
+    if form.validate_on_submit():
+        # This creates a variable which gets information from the database
+        attempted_user = User.query.filter_by(username = form.username.data).first()
+        # If the user and the password match the data stored in the database:
+        if attempted_user and attempted_user.check_password_correction(attempted_password=form.password.data):
+            login_user(attempted_user)
+            flash(f"Successfully logged in as {attempted_user.username}", category="success")
+            return redirect(url_for("market_page"))
+        else:
+            flash("Login failed, please try again!", category="danger")
     return render_template("login.html", form=form)

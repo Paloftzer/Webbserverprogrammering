@@ -2,7 +2,8 @@
 
 #* This imports the necessary packages/modules to route our requests to the correct location and display the correct page.
 from flask.helpers import flash # This imports the error message when a user fails to comply with the rules of creating an account.
-from flask_login import login_user # This imports the login function needed to login.
+from flask_login import login_user, logout_user
+from flask_login.utils import login_required # This imports the login function needed to login as well as the logout function needed to logout.
 from market import app # This imports our app (website) from our market folder.
 from flask import render_template, redirect, url_for # This imports only the necessary packages for us to redirect requests to the correct location.
 from market.models import Item, User # This imports our Item and User modules from our database model.
@@ -18,6 +19,7 @@ def home():
 
 #* This routes to our market page using the flask routing system and defines a name for the route.
 @app.route("/market")
+@login_required
 def market_page():
     # Return all the data from our database and save it as the items variable
     items = Item.query.all()
@@ -63,7 +65,13 @@ def login_page():
         if attempted_user and attempted_user.check_password_correction(attempted_password=form.password.data):
             login_user(attempted_user)
             flash(f"Successfully logged in as {attempted_user.username}", category="success")
-            return redirect(url_for("market_page"))
+            return redirect(url_for("home"))
         else:
             flash("Login failed, please try again!", category="danger")
     return render_template("login.html", form=form)
+
+@app.route("/logout")
+def logout_page():
+    logout_user()
+    flash("Logout successful!", category="info")
+    return redirect(url_for("home"))

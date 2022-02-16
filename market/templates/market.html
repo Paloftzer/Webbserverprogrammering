@@ -8,7 +8,6 @@
 {% endblock %}
 
 {% block content %}
-{% include "partials/_modals.html" %}
       <table class="table table-hover table-dark">
         <thead>
           <tr>
@@ -16,19 +15,20 @@
             <th scope="col">Name</th>
             <th scope="col">Barcode</th>
             <th scope="col">Price</th>
-            <th scope="col">Options</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
             {% for item in items %}
+            {% include "partials/_modals.html" %}
             <tr>
                 <td>#{{ item.id }}</td>
                 <td>{{ item.name }}</td>
                 <td>#{{ item.barcode }}</td>
                 <td>{{ item.price }}$</td>
                 <td>
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Modal-MoreInfo">Info</button>
-                    <button type="button" class="btn btn-success">Purchase</button>
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">Info</button>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#Modal-Purchase-{{ item.id }}">Purchase</button>
                 </td>
             </tr>
             {% endfor %}

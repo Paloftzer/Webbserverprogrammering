@@ -22,9 +22,12 @@ class RegisterForm(FlaskForm):
 
 #* This is the code needed to create our login.
 class LoginForm(FlaskForm):
-    #
     username = StringField(label="Username: ", validators=[DataRequired()])
-    # 
     password = PasswordField(label="Password: ", validators=[DataRequired()])
-    #
     submit = SubmitField(label="Login")
+
+class PurchaseItemForm(FlaskForm):
+    submit = SubmitField(label="Purchase")
+
+class SellItemForm(FlaskForm):
+    submit = SubmitField(label="Sell")

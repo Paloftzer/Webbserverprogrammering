@@ -2,12 +2,12 @@
 
 #* This imports the necessary packages/modules to route our requests to the correct location and display the correct page.
 from flask.helpers import flash # This imports the error message when a user fails to comply with the rules of creating an account.
-from flask_login import login_user, logout_user
+from flask_login import current_user, login_user, logout_user
 from flask_login.utils import login_required # This imports the login function needed to login as well as the logout function needed to logout.
 from market import app # This imports our app (website) from our market folder.
-from flask import render_template, redirect, url_for # This imports only the necessary packages for us to redirect requests to the correct location.
+from flask import render_template, redirect, request, url_for # This imports only the necessary packages for us to redirect requests to the correct location.
 from market.models import Item, User # This imports our Item and User modules from our database model.
-from market.forms import RegisterForm, LoginForm # This imports our RegisterForm so that we can use it for our routes.
+from market.forms import RegisterForm, LoginForm, PurchaseItemForm, SellItemForm # This imports our RegisterForm so that we can use it for our routes.
 from market import db # This imports our database from the __init__.py file in our market folder.
 
 #* This routes to our main page using the Flask routing system and defines a name for the route.
@@ -18,16 +18,22 @@ def home():
     return render_template("index.html")
 
 #* This routes to our market page using the flask routing system and defines a name for the route.
-@app.route("/market")
+@app.route("/market", methods = ["GET", "POST"])
 @login_required
 def market_page():
+    purchase_form = PurchaseItemForm()
+    if request.method == "POST":
+        purchased_item = request.form.get("purchased_item")
+        p_item_object = Item.query.filter_by(name=purchased_item).first()
+        if p_item_object:
+            p_item_object.owner = current_user
+            #! To be continued
     # Return all the data from our database and save it as the items variable
     items = Item.query.all()
     # This returns our market.html file from our templates folder. It also returns the items variable which holds all the information from our database so that we can display it.
-    return render_template("market.html", items=items)
+    return render_template("market.html", items=items, purchase_form=purchase_form)
 
 #* This routes to our register page using the Flask routing system and defines a name for the route, as well as using the GET and POST methods to allow communication with our database.
-#TODO: Allow login
 @app.route("/register", methods=["GET", "POST"])
 def register_page():
     # This initializes our registerForm, which we use in this route.

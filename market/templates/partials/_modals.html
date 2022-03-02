@@ -20,18 +20,19 @@
   <div class="modal-dialog">
     <div style="background-color:rgb(62, 64, 65);" class="modal-content">
       <div class="modal-header">
-        <h5 style="color: white;" class="modal-confirm" id="ModalLabel">Are you sure you want to purchase {{ item.name }}‽</h5>
+        <h4 style="color: white;" class="modal-confirm text-center" id="ModalLabel">Are you sure you want to purchase {{ item.name }}‽</h4>
       </div>
       <div style="color: white;" class="modal-body">
-        This action will cost you {{ item.price }}$
-
         <form method="POST">
-          
+          {{ purchase_form.hidden_tag() }}
+          <h4 class="text-center">This action will cost you <b>{{ item.price }}$</b></h4> <br>
+          <h6 class="text-center">By clicking Purchase you agree to purchase this item and acknowledge that <b>there are no refunds</b></h6> <br>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input id="purchased_item" name="purchased_item" type="hidden" value="{{ item.name }}">
+            {{ purchase_form.submit(class="btn btn-outline-success btn-block") }}
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success" data-dismiss="modal">Purchase</button>
       </div>
     </div>
   </div>

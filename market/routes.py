@@ -26,12 +26,17 @@ def market_page():
         purchased_item = request.form.get("purchased_item")
         p_item_object = Item.query.filter_by(name=purchased_item).first()
         if p_item_object:
-            p_item_object.owner = current_user
-            #! To be continued
-    # Return all the data from our database and save it as the items variable
-    items = Item.query.all()
-    # This returns our market.html file from our templates folder. It also returns the items variable which holds all the information from our database so that we can display it.
-    return render_template("market.html", items=items, purchase_form=purchase_form)
+            if current_user.can_purchase(p_item_object):
+                p_item_object.buy(current_user)
+                flash(f"Congratulations, you have successfully bought {p_item_object.name} for {p_item_object.price}$!", category="success")
+            else:
+                flash(f"Failed to purchase {p_item_object.name}, you don't have enough money", category="danger")
+        return redirect(url_for("market_page"))
+    if request.method == "GET":
+        # Return all the data from our database and save it as the items variable
+        items = Item.query.filter_by(owner=None)
+        # This returns our market.html file from our templates folder. It also returns the items variable which holds all the information from our database so that we can display it.
+        return render_template("market.html", items=items, purchase_form=purchase_form)
 
 #* This routes to our register page using the Flask routing system and defines a name for the route, as well as using the GET and POST methods to allow communication with our database.
 @app.route("/register", methods=["GET", "POST"])

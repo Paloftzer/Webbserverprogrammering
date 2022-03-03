@@ -37,6 +37,9 @@ class User(db.Model, UserMixin):
     def check_password_correction(self, attempted_password):
         if bcrypt.check_password_hash(self.password_hash, attempted_password):
             return True
+        
+    def can_purchase(self, item_obj):
+        return self.budget >= item_obj.price
 
 #* This generates the item table.
 class Item(db.Model):
@@ -52,3 +55,8 @@ class Item(db.Model):
     description = db.Column(db.String(length=1024), nullable=False)
     # This creates an integer column for the owner of an item. It uses the user id to define who owns it.
     owner = db.Column(db.Integer(), db.ForeignKey("user.id"))
+
+    def buy(self, user):
+        self.owner = user.id
+        user.budget -= self.price
+        db.session.commit()

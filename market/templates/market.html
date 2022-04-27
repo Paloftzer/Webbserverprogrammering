@@ -34,7 +34,26 @@
             {% endfor %}
         </tbody>
       </table>
-{% endblock %}
+      <div class="col-4">
+        <h2 style="color: white">Your Items</h2>
+        <p style="color: white">Click on sell to put item back on Market!</p>
+        <div class="row">
+          {% for owned_item in owned_items %}
+          {% include 'partials/_owned_items.html' %}
+    
+          <div class="col-md-6">
+            <div class="card text-center bg-dark">
+              <div class="card-body">
+                <h5 class="card-title"> {{ owned_item.name }} </h5>
+                <button style="margin : 10px" type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#Modal-SellingConfirm-{{ owned_item.id }}">Sell Item</button>
+                <p class="card-text">You will get {{  owned_item.price  }}$ back for selling this Item</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endblock %}
 
 <!--The code extends from our base.html, 
 gives it a new title and adds the table needed for displaying our items.-->

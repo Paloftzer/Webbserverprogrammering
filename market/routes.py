@@ -3,6 +3,7 @@
 #* This imports the necessary packages/modules to route our requests to the correct location and display the correct page.
 from flask.helpers import flash # This imports the error message when a user fails to comply with the rules of creating an account.
 from flask_login import current_user, login_user, logout_user
+from turtle import pensize
 from flask_login.utils import login_required # This imports the login function needed to login as well as the logout function needed to logout.
 from market import app # This imports our app (website) from our market folder.
 from flask import render_template, redirect, request, url_for # This imports only the necessary packages for us to redirect requests to the correct location.
@@ -35,8 +36,9 @@ def market_page():
     if request.method == "GET":
         # Return all the data from our database and save it as the items variable
         items = Item.query.filter_by(owner=None)
+        owned_items = Item.query.filter_by(owner=current_user.id)
         # This returns our market.html file from our templates folder. It also returns the items variable which holds all the information from our database so that we can display it.
-        return render_template("market.html", items=items, purchase_form=purchase_form)
+        return render_template("market.html", items=items, purchase_form=purchase_form, owned_items=owned_items)
 
 #* This routes to our register page using the Flask routing system and defines a name for the route, as well as using the GET and POST methods to allow communication with our database.
 @app.route("/register", methods=["GET", "POST"])

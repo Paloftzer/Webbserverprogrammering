@@ -41,6 +41,9 @@ class User(db.Model, UserMixin):
     def can_purchase(self, item_obj):
         return self.budget >= item_obj.price
 
+    def owns(self, item_obj):
+        return self.id == item_obj.owner
+
 #* This generates the item table.
 class Item(db.Model):
     # This creates an integer column for the id in the database, and it is the primary_key.
@@ -59,4 +62,9 @@ class Item(db.Model):
     def buy(self, user):
         self.owner = user.id
         user.budget -= self.price
+        db.session.commit()
+    
+    def sell(self, user):
+        self.owner = None
+        user.budget += self.price
         db.session.commit()

@@ -23,6 +23,7 @@ def home():
 @login_required
 def market_page():
     purchase_form = PurchaseItemForm()
+    sell_form = SellItemForm()
     if request.method == "POST":
         purchased_item = request.form.get("purchased_item")
         p_item_object = Item.query.filter_by(name=purchased_item).first()
@@ -32,13 +33,22 @@ def market_page():
                 flash(f"Congratulations, you have successfully bought {p_item_object.name} for {p_item_object.price}$!", category="success")
             else:
                 flash(f"Failed to purchase {p_item_object.name}, you don't have enough money", category="danger")
+                
+        sold_item = request.form.get("sold_item")
+        s_item_object = Item.query.filter_by(name=sold_item).first()
+        if s_item_object:
+            if current_user.owns(s_item_object):
+                s_item_object.sell(current_user)
+                flash(f"You have successfully sold {s_item_object.name} for {s_item_object.price}$!", category="success")
+            else:
+                flash(f"You failed to sell item {s_item_object.name}")
         return redirect(url_for("market_page"))
     if request.method == "GET":
         # Return all the data from our database and save it as the items variable
         items = Item.query.filter_by(owner=None)
         owned_items = Item.query.filter_by(owner=current_user.id)
         # This returns our market.html file from our templates folder. It also returns the items variable which holds all the information from our database so that we can display it.
-        return render_template("market.html", items=items, purchase_form=purchase_form, owned_items=owned_items)
+        return render_template("market.html", items=items, owned_items=owned_items, purchase_form=purchase_form, sell_form=sell_form)
 
 #* This routes to our register page using the Flask routing system and defines a name for the route, as well as using the GET and POST methods to allow communication with our database.
 @app.route("/register", methods=["GET", "POST"])
